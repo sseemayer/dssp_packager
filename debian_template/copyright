@@ -1,0 +1,24 @@
+This work was packaged for Debian by:
+
+    %IDENTITY% on %TIMESTAMP%
+
+It was downloaded from:
+
+    <http://swift.cmbi.ru.nl/gv/dssp/>
+
+Upstream Author(s):
+
+    Wolfgang Kabsch
+    Chris Sander
+    
+
+License:
+
+    Proprietary license, see http://swift.cmbi.ru.nl/gv/dssp/
+
+The Debian packaging is:
+
+    Copyright (C) 2011 %IDENTITY%
+
+and is licensed under the GPL version 3,
+see "/usr/share/common-licenses/GPL-3".

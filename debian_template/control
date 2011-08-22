@@ -1,0 +1,17 @@
+Source: dssp
+Section: science
+Priority: extra
+Maintainer: %IDENTITY%
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev
+Standards-Version: 3.8.4
+Homepage: http://swift.cmbi.ru.nl/gv/dssp/
+
+Package: dssp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: The DSSP program for annotating protein secondary structure.
+ The DSSP program was designed by Wolfgang Kabsch and Chris Sander to 
+ standardize secondary structure assignment. DSSP is a database of 
+ secondary structure assignments (and much more) for all protein entries 
+ in the Protein Data Bank (PDB). DSSP is also the program that calculates 
+ DSSP entries from PDB entries. 

@@ -9,9 +9,8 @@
 # FTP URLs to get DSSP from
 dssp_64='ftp://ftp.cmbi.ru.nl/pub/software/dssp/dssp-2-linux-amd64.gz'
 dssp_32='ftp://ftp.cmbi.ru.nl/pub/software/dssp/dssp-2-linux-i386.gz'
+version='2.0'
 
-
-builddir=build
 
 # fail : Exit with an error message
 function fail {
@@ -28,8 +27,8 @@ function ensure_installed {
 	if [ $INSTALLED == '0' ]; then
 		echo "$1 is installed, OK"
 	else
-		echo -e "\nPackage $1 is not installed, please install by typing (as root):"
-		echo -e "\n\t# apt-get install $1\n"
+		echo -e "\nPackage $1 is not installed, please install by typing (as root):" 2>&1
+		echo -e "\n\t# apt-get install $1\n" 2>&1
 		exit 1
 	fi
 
@@ -42,13 +41,27 @@ else
 	dssp_tarball_url=$dssp_32
 fi
 
-
-echo Checking environment...
-test -d debian_template || fail "Could not find template in debian_template!"
-
 echo Checking required packages...
 ensure_installed build-essential
 ensure_installed wget
+ensure_installed gnupg
+
+
+identity=$(gpg -k | grep uid | cut -b 22- | head -n1);
+builddir=build
+timestamp=$(date -R)
+
+echo -e "\nChecking GPG Private Key..."
+if [ "$identity" == "" ]; then
+	echo -e "No GPG private key was found!\nPlease use gpg --gen-key to generate one!\n\n"
+	exit 1
+else 
+	echo "Will use identity: $identity"
+fi
+
+echo -e "\nChecking environment..."
+test -d debian_template || fail "Could not find template in debian_template!"
+
 
 if [ -d $builddir ]; then
 	echo -e "\nFinished dependency checking. Cleaning up workspace in $builddir"
@@ -66,5 +79,16 @@ wget -O $builddir/dssp.gz $dssp_tarball_url || fail "Could not download DSSP!"
 echo -e "\nFinished downlading. Extracting..."
 (gunzip -f $builddir/dssp.gz && chmod +x $builddir/dssp) || fail "Could not extract DSSP!"
 
-echo -e "\nFinished extracting. Building package..."
+echo -e "\nFinished extracting. Customizing Debian Package..."
 cp -r debian_template/ $builddir/debian || fail "Could not copy over template!"
+
+for file in $( find $builddir/debian -type f ); do
+
+	sed -i "s/%IDENTITY%/$identity/g" $file
+	sed -i "s/%VERSION%/$version/g" $file
+	sed -i "s/%TIMESTAMP%/$timestamp/g" $file
+
+done;
+
+
+echo -e "\nALL DONE. Find the package at XXXXXX\n\nNote: dssp requires libstdc++6 version >= 4.6. This is _not_ available in Debian squeeze, you will have to enable testing."

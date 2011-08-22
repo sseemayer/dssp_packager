@@ -1,4 +1,3 @@
-
 DSSP_packager
 =============
 
@@ -17,3 +16,13 @@ If you're interested in using DSSP, please check our their [License](http://swif
 
 Please make sure to also [cite DSSP](http://swift.cmbi.ru.nl/gv/dssp/DSSP_1.html) in your work!
 
+Usage
+-----
+
+DSSP_packager will require the following to be installed on the build system (should be a Debian system, too):
+
+* apt, dpkg
+* wget, gunzip, sed
+* gpg
+
+On the system running the DSSP package, make sure to install a libstdc++6 version greater than 4.6 - this is not available in Debian squeeze, so install it from testing instead.

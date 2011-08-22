@@ -7,7 +7,7 @@ Standards-Version: 3.8.4
 Homepage: http://swift.cmbi.ru.nl/gv/dssp/
 
 Package: dssp
-Architecture: any
+Architecture: %ARCHITECTURE%
 Depends: ${shlibs:Depends}, ${misc:Depends}, libstdc++6 (>=4.6)
 Description: The DSSP program for annotating protein secondary structure.
  The DSSP program was designed by Wolfgang Kabsch and Chris Sander to 

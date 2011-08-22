@@ -37,8 +37,10 @@ function ensure_installed {
 # Determine version to download according to architecture
 if [ $(uname -m) == "x86_64" ]; then
 	dssp_tarball_url=$dssp_64
+	architecture='amd64'
 else 
 	dssp_tarball_url=$dssp_32
+	architecture='i386'
 fi
 
 echo Checking required packages...
@@ -88,13 +90,22 @@ echo -e "\nFinished downlading. Extracting..."
 echo -e "\nFinished extracting. Customizing Debian Package..."
 cp -r debian_template/ $builddir/debian || fail "Could not copy over template!"
 
+# this is required or dh_installdocs will fail
+touch $builddir/README
+
 for file in $( find $builddir/debian -type f ); do
 
 	sed -i "s/%IDENTITY%/$identity/g" $file
 	sed -i "s/%VERSION%/$version/g" $file
 	sed -i "s/%TIMESTAMP%/$timestamp/g" $file
+	sed -i "s/%ARCHITECTURE%/$architecture/g" $file
 
 done;
 
 
-echo -e "\nALL DONE. Find the package at XXXXXX\n\nNote: dssp requires libstdc++6 version >= 4.6. This is _not_ available in Debian squeeze, you will have to enable testing."
+echo "\nFinished customization. Building package..."
+pushd $builddir
+dpkg-buildpackage || fail "Could not build package!"
+popd
+
+echo -e "\nALL DONE. Find the package at dssp_${version}_${architecture}.deb\n\nNote: dssp requires libstdc++6 version >= 4.6. This is _not_ available in Debian squeeze, you will have to enable testing."

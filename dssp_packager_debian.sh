@@ -53,10 +53,16 @@ timestamp=$(date -R)
 
 echo -e "\nChecking GPG Private Key..."
 if [ "$identity" == "" ]; then
-	echo -e "No GPG private key was found!\nPlease use gpg --gen-key to generate one!\n\n"
+	echo -e "No GPG private key was found!\nPlease use gpg --gen-key to generate one!\n\n" 1>&2
 	exit 1
 else 
-	echo "Will use identity: $identity"
+	echo -e "Will use identity: $identity\n"
+	read -p "Is this OK (Y/n)? "
+	
+	if [ "$REPLY" != "y" -a "$REPLY" != "Y" -a "$REPLY" != "" ]; then
+		echo -e "\nPlease make sure that the identity you with to use is the first one in your gpg -k output." >&2
+		exit 1
+	fi
 fi
 
 echo -e "\nChecking environment..."

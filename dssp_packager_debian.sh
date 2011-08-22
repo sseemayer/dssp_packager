@@ -43,7 +43,16 @@ else
 	architecture='i386'
 fi
 
-echo Checking required packages...
+# License question
+echo -e "LICENSE CONFIRMATION\n\nDSSP may only be downloaded after filling in the DSSP license agreement found at http://swift.cmbi.ru.nl/gv/dssp/HTML/license.html and sending it to the DSSP team!\n\nPlease make sure you have done so before using DSSP_packager!\n"
+read -p "Have you already registered DSSP? (Y/n)? "
+
+if [ "$REPLY" != "y" -a "$REPLY" != "Y" -a "$REPLY" != "" ]; then
+	echo -e "\nPlease print out the licensing form, fill it in, send it to DSSP and then come back.\n\n" >&2
+	exit 1
+fi
+
+echo -e "\nChecking required packages..."
 ensure_installed build-essential
 ensure_installed wget
 ensure_installed gnupg
